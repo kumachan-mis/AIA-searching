@@ -45,17 +45,17 @@ class Square {
 
 class ListMember {
     private Square child;
-    private double dist;
+    private double cost;
 
-    ListMember(Square child, Square parent, double dist, String c) {
+    ListMember(Square child, Square parent, double cost, String str) {
         this.child = child;
-        this.dist = dist;
+        this.cost = cost;
         if(parent == null) child.setPath("");
-        else child.setPath(parent.getPath() + c);
+        else child.setPath(parent.getPath() + str);
     }
 
-    double getDist(){
-        return dist;
+    double getCost(){
+        return cost;
     }
 
     Square getChild() {
@@ -64,16 +64,12 @@ class ListMember {
 }
 
 class ListComparator implements Comparator {
-    private static final double delta = 1e-6;
     @Override
     public int compare(Object obj1, Object obj2) {
 
         ListMember member1 = (ListMember) obj1;
         ListMember member2 = (ListMember) obj2;
-        double d1 = member1.getDist(), d2 = member2.getDist();
-
-        if(d1 - d2 > delta) return 1;
-        else if(d2 - d1 > delta) return -1;
-        else return 0;
+        double d1 = member1.getCost(), d2 = member2.getCost();
+        return Double.compare(d1, d2);
     }
 }

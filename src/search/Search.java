@@ -82,6 +82,9 @@ abstract class Search {
     abstract void childrenProcess();
 
     double heuristicFunc(int x, int y) {
-        return (x - goal.getX())  * (x - goal.getX()) + (y - goal.getY()) * (y - goal.getY());
+        return Math.sqrt(
+                (x - goal.getX())  * (x - goal.getX())
+                        + (y - goal.getY()) * (y - goal.getY())
+        );
     }
 }

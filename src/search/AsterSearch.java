@@ -60,7 +60,7 @@ public class AsterSearch extends Search {
         Square child = open.getChild();
 
         if(!child.getAbleToVisit()) return;
-        if (open.getDist() <= cost(presentSquare, child)) return;
+        if (open.getCost() <= cost(presentSquare, child)) return;
 
         openList.remove(open);
         openList.add(new ListMember(child, presentSquare, cost(presentSquare, child), getPathSymbol(type)));
@@ -71,7 +71,7 @@ public class AsterSearch extends Search {
         int x = child.getX(), y = child.getY();
 
         if(Map.get(x, y) == '*' || child.getAbleToVisit()) return;
-        if (open.getDist() <= cost(presentSquare, child)) return;
+        if (open.getCost() <= cost(presentSquare, child)) return;
 
         child.reOpen();
         openList.add(new ListMember(child, presentSquare, cost(presentSquare, child), getPathSymbol(type)));
