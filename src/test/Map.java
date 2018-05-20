@@ -18,6 +18,7 @@ public class Map {
                 map[y][x] = temp.charAt(x);
             }
         }
+        scanner.close();
     }
 
     static void show() {

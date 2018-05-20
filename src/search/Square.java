@@ -1,4 +1,5 @@
 package search;
+
 class Square {
     private int x, y;
     private boolean ableToVisit;

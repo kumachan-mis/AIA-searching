@@ -1,5 +1,4 @@
 package search;
-
 import java.util.Collections;
 
 public class GreedySearch extends Search {
