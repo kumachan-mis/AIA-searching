@@ -1,5 +1,6 @@
 package search;
-import test.Map;
+
+import java.util.Collections;
 
 public class GreedySearch extends Search {
 
@@ -8,21 +9,16 @@ public class GreedySearch extends Search {
         System.out.println("***** Greedy Search *****");
     }
 
-    private void addToOpenList(Square square, String str) {
-        if(!square.getAbleToVisit()) return;
-        openList.add(new ListMember(square, presentSquare, heuristicFunc(square.getX(), square.getY()), str));
+    @Override
+    void childrenProcess() {
+        Collections.shuffle(typeList);
+        for(int index = 0; index < 4; ++index) {
+            forceToAddToOpenList(typeList.get(index));
+        }
     }
 
     @Override
-    void childrenProcess() {
-        int x = presentSquare.getX(), y = presentSquare.getY();
-
-        if(x < Map.W - 1) addToOpenList(sq[x + 1][y], "R");
-
-        if(y < Map.H - 1) addToOpenList(sq[x][y + 1], "D");
-
-        if(0 < x) addToOpenList(sq[x - 1][y], "L");
-
-        if(0 < y) addToOpenList(sq[x][y - 1], "U");
+    double cost(Square parent, Square child) {
+        return heuristicFunc(child.getX(), child.getY());
     }
 }

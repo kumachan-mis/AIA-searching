@@ -1,16 +1,12 @@
 package search;
 import test.Map;
+import java.util.Collections;
 
 public class AsterSearch extends Search {
 
     public AsterSearch(int initCapacity) {
         super(initCapacity);
         System.out.println("***** A* Search *****");
-    }
-
-    @Override
-    public void addParentToClosedList() {
-        super.addParentToClosedList();
     }
 
     private int childType(Square square) {
@@ -36,23 +32,16 @@ public class AsterSearch extends Search {
             foundMember[type] = open;
         }
 
-        for(int type = 0; type < 4; ++type) {
+        Collections.shuffle(typeList);
+        for(int index = 0; index < 4; ++index) {
+            int type = typeList.get(index);
+
             if(isFound[type]) {
                 replaceOpenList(foundMember[type], type);
                 removeFromClosedList(foundMember[type], type);
             } else {
                 forceToAddToOpenList(type);
             }
-        }
-    }
-
-    private String getPathSymbol(int type) {
-        switch (type) {
-            case 0: return "R";
-            case 1: return "U";
-            case 2: return "L";
-            case 3: return "D";
-            default: return "";
         }
     }
 
@@ -77,30 +66,8 @@ public class AsterSearch extends Search {
         openList.add(new ListMember(child, presentSquare, cost(presentSquare, child), getPathSymbol(type)));
     }
 
-    private void forceToAddToOpenList(int type) {
-        int x = presentSquare.getX(), y = presentSquare.getY();
-        switch (type) {
-            case 0:
-                x++;
-                break;
-            case 1:
-                y--;
-                break;
-            case 2:
-                x--;
-                break;
-            case 3:
-                y++;
-                break;
-        }
-        if (x < 0 || Map.W <= x || y < 0 || Map.H <= y) return;
-
-        Square child = sq[x][y];
-        if (child.getAbleToVisit())
-            openList.add(new ListMember(child, presentSquare, cost(presentSquare, child), getPathSymbol(type)));
-    }
-
-    private double cost(Square parent, Square child) {
+    @Override
+    double cost(Square parent, Square child) {
         return parent.getPath().length() + heuristicFunc(child.getX(), child.getY()) + 1.0;
     }
 

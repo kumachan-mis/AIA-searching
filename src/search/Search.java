@@ -1,15 +1,17 @@
 package search;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import test.Map;
 
 abstract class Search {
-    Square[][] sq = new Square[Map.W][Map.H];
+    private Square[][] sq = new Square[Map.W][Map.H];
     Square presentSquare;
     private Square start, goal;
     Queue<ListMember> openList;
+    ArrayList<Integer> typeList = new ArrayList<>();
 
     public void doSearch() {
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
@@ -42,7 +44,11 @@ abstract class Search {
                 setSq(x, y);
             }
         }
-        openList = new PriorityQueue<>(initCapacity, new ListComparator());
+        openList = new PriorityQueue<ListMember>(initCapacity, new ListComparator());
+
+        for(int type = 0; type < 4; ++type) {
+            typeList.add(type);
+        }
     }
 
     private void setSq(int x, int y) {
@@ -75,11 +81,44 @@ abstract class Search {
         return isEnd;
     }
 
-    void addParentToClosedList() {
+    private void addParentToClosedList() {
         presentSquare.close();
     }
 
     abstract void childrenProcess();
+
+    void forceToAddToOpenList(int type) {
+        int x = presentSquare.getX(), y = presentSquare.getY();
+        switch (type) {
+            case 0:
+                x++;
+                break;
+            case 1:
+                y--;
+                break;
+            case 2:
+                x--;
+                break;
+            case 3:
+                y++;
+                break;
+        }
+        if (x < 0 || Map.W <= x || y < 0 || Map.H <= y) return;
+
+        Square child = sq[x][y];
+        if (child.getAbleToVisit())
+            openList.add(new ListMember(child, presentSquare, cost(presentSquare, child), getPathSymbol(type)));
+    }
+
+    String getPathSymbol(int type) {
+        switch (type) {
+            case 0: return "R";
+            case 1: return "U";
+            case 2: return "L";
+            case 3: return "D";
+            default: return "";
+        }
+    }
 
     double heuristicFunc(int x, int y) {
         return Math.sqrt(
@@ -87,4 +126,6 @@ abstract class Search {
                         + (y - goal.getY()) * (y - goal.getY())
         );
     }
+
+    abstract double cost(Square parent, Square child);
 }
